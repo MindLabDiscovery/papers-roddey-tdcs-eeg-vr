@@ -855,254 +855,254 @@ dlmwrite('gamma_diff_04.txt',gamma_diff_04)
 
 
 %% Fig 4F linear regressions
-%this is gamma coh diff vs kinematics 
-
-load('/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_scripts/final_04_win/subjectData.mat')
-load('/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_scripts/final_04_win/icoh_data_anal_2022_11_09.mat')
-
-sbj_num=['03';'04';'05';'42';'43';'13';'15';'17';'18';'21';'22';'24';'25';'26';'29';'30';'20';'23';'27';'28';'36'];
-
-dz={'stroke';'healthy'}
-stim_status={'Stim';'Sham'}
-kin_lbl={'movementDuration';'reactionTime';'handpathlength';'avgVelocity';'maxVelocity';'velocityPeaks';...
-    'timetoMaxVel';'timetoMaxVeln';'avgAcceleration';'maxAcceleration';...
-    'accuracy';'normalizedjerk';'IOC'};
-FOI_label={'Delta','Theta','Alpha','Beta','Gamma'};
-cs_stim=[1 2 3 20 21];
-cs_sham=[4 5 6 7 9];
-hc_stim=[10 12 13 14 17 18];
-hc_sham=[8 11 15 16 19];
-
-
-pvalues = []; % Initialize an empty array to collect p-values
-groupNames = {}; % Collect group names
-kinLabels = {}; % Collect kinematic labels
-FOILabels = {}; % Collect FOI labels
-
-%in the future put the above in 1 cell and then just call each cell,
-%otherwise you will be stuck changing it for each iteration!!
-count=0;
-for f=2:5
-    for k=1:2
-        for l=1:2
-            for kin_idx=[1 2 4 5 6 7 8 9 10]%1:13%:12%[1 6]
-                count=count+1
-                if k==1 & l==1% 
-                    i1=cs_stim
-                elseif k==1 & l==2
-                    i1=cs_sham
-                elseif k==2 & l==1
-                    i1=hc_stim
-                elseif k==2 & l==2
-                    i1=hc_sham
-                end
-                %Hold-Prep
-                for i=i1
-                    for j=1:4
-                        eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(',num2str(i),',',num2str(j),')=nanmean(subjectData(',num2str(i),').kinematics.data{1,',num2str(kin_idx),'}(:,',num2str(j),'))'])
-                    end
-                end
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin=',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(~all(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin==0,2),:)'])
-
-                times_all={'pre';'i05';'i15';'pos'}
-                for i=1:4
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,',num2str(i),')=squeeze(icoh_data_anal_2022_11_09.mat_diff.c3c4.',FOI_label{f},'.',dz{k},'.Hold_Prep.',stim_status{l},'.',times_all{i,:},')'])
-                end
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,1),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,1))'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,2),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,2))'])
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,3),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,3))'])
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,4),1);'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,4))'])
-
-%                 figure; set(gcf,'Position',[214 574 560 420])
+% %this is gamma coh diff vs kinematics 
+% 
+% load('/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_scripts/final_04_win/subjectData.mat')
+% load('/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_scripts/final_04_win/icoh_data_anal_2022_11_09.mat')
+% 
+% sbj_num=['03';'04';'05';'42';'43';'13';'15';'17';'18';'21';'22';'24';'25';'26';'29';'30';'20';'23';'27';'28';'36'];
+% 
+% dz={'stroke';'healthy'}
+% stim_status={'Stim';'Sham'}
+% kin_lbl={'movementDuration';'reactionTime';'handpathlength';'avgVelocity';'maxVelocity';'velocityPeaks';...
+%     'timetoMaxVel';'timetoMaxVeln';'avgAcceleration';'maxAcceleration';...
+%     'accuracy';'normalizedjerk';'IOC'};
+% FOI_label={'Delta','Theta','Alpha','Beta','Gamma'};
+% cs_stim=[1 2 3 20 21];
+% cs_sham=[4 5 6 7 9];
+% hc_stim=[10 12 13 14 17 18];
+% hc_sham=[8 11 15 16 19];
+% 
+% 
+% pvalues = []; % Initialize an empty array to collect p-values
+% groupNames = {}; % Collect group names
+% kinLabels = {}; % Collect kinematic labels
+% FOILabels = {}; % Collect FOI labels
+% 
+% %in the future put the above in 1 cell and then just call each cell,
+% %otherwise you will be stuck changing it for each iteration!!
+% count=0;
+% for f=2:5
+%     for k=1:2
+%         for l=1:2
+%             for kin_idx=[1 2 4 5 6 7 8 9 10]%1:13%:12%[1 6]
+%                 count=count+1
+%                 if k==1 & l==1% 
+%                     i1=cs_stim
+%                 elseif k==1 & l==2
+%                     i1=cs_sham
+%                 elseif k==2 & l==1
+%                     i1=hc_stim
+%                 elseif k==2 & l==2
+%                     i1=hc_sham
+%                 end
+%                 %Hold-Prep
+%                 for i=i1
+%                     for j=1:4
+%                         eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(',num2str(i),',',num2str(j),')=nanmean(subjectData(',num2str(i),').kinematics.data{1,',num2str(kin_idx),'}(:,',num2str(j),'))'])
+%                     end
+%                 end
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin=',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(~all(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin==0,2),:)'])
+% 
+%                 times_all={'pre';'i05';'i15';'pos'}
+%                 for i=1:4
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,',num2str(i),')=squeeze(icoh_data_anal_2022_11_09.mat_diff.c3c4.',FOI_label{f},'.',dz{k},'.Hold_Prep.',stim_status{l},'.',times_all{i,:},')'])
+%                 end
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,1),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,1))'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,2),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,2))'])
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,3),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,3))'])
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,4),1);'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,4))'])
+% 
+% %                 figure; set(gcf,'Position',[214 574 560 420])
+% %                 subplot(2,2,1); hold on
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,1),''.'')'])
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pv,''r'')'])
+% %                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']) < 0.05
+% %                     title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']))],'Color','r')
+% %                 else
+% %                     title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']))])
+% %                 end
+% % 
+% %                 subplot(2,2,2); hold on
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,2),''.'')'])
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pv,''r'')'])
+% %                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']) < 0.05
+% %                     title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']))],'Color','r')
+% %                 else
+% %                     title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']))])
+% %                 end
+% % 
+% %                 subplot(2,2,3); hold on
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,3),''.'')'])
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pv,''r'')'])
+% %                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']) <0.05
+% %                     title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']))],'Color','r')
+% %                 else
+% %                     title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']))])
+% %                 end
+% % 
+% %                 subplot(2,2,4); hold on
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,4),''.'')'])
+% %                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pv,''r'')'])
+% %                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']) < 0.05
+% %                     title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']))],'Color','r')
+% %                 else
+% %                     title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']))])
+% %                 end
+% %                 sgtitle([FOI_label{f},' Hold Prep ',dz{k},' ',stim_status{l},' ',subjectData(1).kinematics.label{kin_idx}])
+% 
+%                 %Prep-Reach
+%                 for i=i1
+%                     for j=1:4
+%                         eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(',num2str(i),',',num2str(j),')=nanmean(subjectData(',num2str(i),').kinematics.data{1,',num2str(kin_idx),'}(:,',num2str(j),'))'])
+%                     end
+%                 end
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin=',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(~all(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin==0,2),:)'])
+% 
+%                 times_all={'pre';'i05';'i15';'pos'}
+%                 for i=1:4
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,',num2str(i),')=squeeze(icoh_data_anal_2022_11_09.mat_diff.c3c4.',FOI_label{f},'.',dz{k},'.Prep_Reach.',stim_status{l},'.',times_all{i,:},')'])
+%                 end
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,1),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,1))'])
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,2),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,2))'])
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,3),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,3))'])
+% 
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,4),1)'])
+%                 eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pf,',...
+%                     FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4))'])
+%                 eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p]=',...
+%                     'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,4))'])
+% 
+%                 figure; set(gcf,'Position',[805 572 560 420])
 %                 subplot(2,2,1); hold on
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,1),''.'')'])
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_pv,''r'')'])
-%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']) < 0.05
-%                     title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']))],'Color','r')
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,1),''.'')'])
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pv,''r'')'])
+%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']) < 0.05
+%                     title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']))],'Color','r')
 %                 else
-%                     title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']))])
+%                     title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']))])
 %                 end
 % 
 %                 subplot(2,2,2); hold on
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,2),''.'')'])
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_pv,''r'')'])
-%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']) < 0.05
-%                     title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']))],'Color','r')
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,2),''.'')'])
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pv,''r'')'])
+%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']) < 0.05
+%                     title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']))],'Color','r')
 %                 else
-%                     title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']))])
+%                     title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']))])
 %                 end
 % 
 %                 subplot(2,2,3); hold on
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,3),''.'')'])
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_pv,''r'')'])
-%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']) <0.05
-%                     title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']))],'Color','r')
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,3),''.'')'])
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pv,''r'')'])
+%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)']) < 0.05
+%                     title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)'])),'Color','r'])
 %                 else
-%                     title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']))])
+%                     title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)']))])
 %                 end
 % 
 %                 subplot(2,2,4); hold on
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_kin(:,4),''.'')'])
-%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_pv,''r'')'])
-%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']) < 0.05
-%                     title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']))],'Color','r')
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,4),''.'')'])
+%                 eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pv,''r'')'])
+%                 if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)']) < 0.05
+%                     title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)']))],'Color','r')
 %                 else
-%                     title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']))])
+%                     title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)']))])
 %                 end
-%                 sgtitle([FOI_label{f},' Hold Prep ',dz{k},' ',stim_status{l},' ',subjectData(1).kinematics.label{kin_idx}])
-
-                %Prep-Reach
-                for i=i1
-                    for j=1:4
-                        eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(',num2str(i),',',num2str(j),')=nanmean(subjectData(',num2str(i),').kinematics.data{1,',num2str(kin_idx),'}(:,',num2str(j),'))'])
-                    end
-                end
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin=',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(~all(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin==0,2),:)'])
-
-                times_all={'pre';'i05';'i15';'pos'}
-                for i=1:4
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,',num2str(i),')=squeeze(icoh_data_anal_2022_11_09.mat_diff.c3c4.',FOI_label{f},'.',dz{k},'.Prep_Reach.',stim_status{l},'.',times_all{i,:},')'])
-                end
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,1),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,1))'])
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,2),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,2))'])
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,3),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,3))'])
-
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pf=polyfit(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,4),1)'])
-                eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pv=polyval(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pf,',...
-                    FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4))'])
-                eval(['[',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_r,',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p]=',...
-                    'corrcoef(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,4))'])
-
-                figure; set(gcf,'Position',[805 572 560 420])
-                subplot(2,2,1); hold on
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,1),''.'')'])
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,1),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_pv,''r'')'])
-                if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']) < 0.05
-                    title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']))],'Color','r')
-                else
-                    title(['pre ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']))])
-                end
-
-                subplot(2,2,2); hold on
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,2),''.'')'])
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,2),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_pv,''r'')'])
-                if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']) < 0.05
-                    title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']))],'Color','r')
-                else
-                    title(['i05 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']))])
-                end
-
-                subplot(2,2,3); hold on
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,3),''.'')'])
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,3),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_pv,''r'')'])
-                if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)']) < 0.05
-                    title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)'])),'Color','r'])
-                else
-                    title(['i15 ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)']))])
-                end
-
-                subplot(2,2,4); hold on
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_kin(:,4),''.'')'])
-                eval(['plot(',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_eeg(:,4),',FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_pv,''r'')'])
-                if eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)']) < 0.05
-                    title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)']))],'Color','r')
-                else
-                    title(['pos ',num2str(eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)']))])
-                end
-                sgtitle([FOI_label{f},' Prep Reach ',dz{k},' ',stim_status{l},' ',subjectData(1).kinematics.label{kin_idx}])
-
-                icoh_lin_reg_p_all(count,:)=[f,k,l,kin_idx,eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)']),...
-                    eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)'])];
-
-
-                %p
-
-                clear *_cc *_pf *_pv *_r
-            end
-        end
-    end
-end
-
-dz={'stroke';'healthy'}
-stim_status={'Stim';'Sham'}
-time={'pre';'i05';'i15';'pos'}
-phase={'hold_prep';'Prep_Reach'}
-kin_lbl={'movementDuration';'reactionTime';'handpathlength';'avgVelocity';'maxVelocity';'velocityPeaks';...
-    'timetoMaxVel';'timetoMaxVeln';'avgAcceleration';'maxAcceleration';...
-    'accuracy';'normalizedjerk';'IOC'};
-FOI_label={'Delta','Theta','Alpha','Beta','Gamma'};
-cs_stim=[1 2 3 20 21];
-cs_sham=[4 5 6 7 9];
-hc_stim=[10 12 13 14 17 18];
-hc_sham=[8 11 15 16 19];
-
-
-count=0;
-for f=1:5
-    for k=1:2
-        for l=1:2
-            for p=1:2
-                for t=1:4
-                    for kin_idx=[1 2 4 5 6 7 8 9 10]%1:13%:12%[1 6]
-                        count=count+1;
-                        p_sum(count,:)=[f,kin_idx,p,k,l,t,eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_',phase{p},'_',dz{k},'_',stim_status{l},'_',time{t},'_p(2);'])];
-                    end
-                end
-            end
-        end
-    end
-end
-
-% [fdr_r]=mafdr(p_sum(1:50,7))tried fdr - very unstable, do not use
-
+%                 sgtitle([FOI_label{f},' Prep Reach ',dz{k},' ',stim_status{l},' ',subjectData(1).kinematics.label{kin_idx}])
+% 
+%                 icoh_lin_reg_p_all(count,:)=[f,k,l,kin_idx,eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pre_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i05_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_i15_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_hold_prep_',dz{k},'_',stim_status{l},'_pos_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pre_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i05_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_i15_p(2)']),...
+%                     eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_Prep_Reach_',dz{k},'_',stim_status{l},'_pos_p(2)'])];
+% 
+% 
+%                 %p
+% 
+%                 clear *_cc *_pf *_pv *_r
+%             end
+%         end
+%     end
+% end
+% 
+% dz={'stroke';'healthy'}
+% stim_status={'Stim';'Sham'}
+% time={'pre';'i05';'i15';'pos'}
+% phase={'hold_prep';'Prep_Reach'}
+% kin_lbl={'movementDuration';'reactionTime';'handpathlength';'avgVelocity';'maxVelocity';'velocityPeaks';...
+%     'timetoMaxVel';'timetoMaxVeln';'avgAcceleration';'maxAcceleration';...
+%     'accuracy';'normalizedjerk';'IOC'};
+% FOI_label={'Delta','Theta','Alpha','Beta','Gamma'};
+% cs_stim=[1 2 3 20 21];
+% cs_sham=[4 5 6 7 9];
+% hc_stim=[10 12 13 14 17 18];
+% hc_sham=[8 11 15 16 19];
+% 
+% 
+% count=0;
+% for f=1:5
+%     for k=1:2
+%         for l=1:2
+%             for p=1:2
+%                 for t=1:4
+%                     for kin_idx=[1 2 4 5 6 7 8 9 10]%1:13%:12%[1 6]
+%                         count=count+1;
+%                         p_sum(count,:)=[f,kin_idx,p,k,l,t,eval([FOI_label{f},'_',kin_lbl{kin_idx},'_c3c4_diff_',phase{p},'_',dz{k},'_',stim_status{l},'_',time{t},'_p(2);'])];
+%                     end
+%                 end
+%             end
+%         end
+%     end
+% end
+% 
+% % [fdr_r]=mafdr(p_sum(1:50,7))tried fdr - very unstable, do not use
+% 
 
 
 % I imported these into graphpad
@@ -1112,8 +1112,308 @@ end
 % dlmwrite('file_str_stim_vp_eeg.txt',str_stim_vp_eeg)
 % dlmwrite('file_str_stim_vp_kin.txt',str_stim_vp_kin)
 
+%% NEW Fig 4F Linear Regressions
+%% Fig 4F linear regressions — gamma coherence diff vs kinematics
+%  Vectorised rewrite. ~50–200x faster than the eval-based original.
+%
+%  Outputs in workspace:
+%    R                 — nested struct of all regression results
+%    p_sum             — [f, kin_idx, phaseIdx, k, l, t, pvalue] rows
+%    icoh_lin_reg_p_all— [f, k, l, kin_idx, p_hold_prep(4), p_prep_reach(4)] rows
+%    Plus all the dynamically-named *_kin / *_eeg / *_pf / *_pv / *_r / *_p
+%    variables the original script created (assignin'd at the end).
+%
+%  After computation, plot any combination with:
+%    plotRegressions(R, 'Gamma', 'stroke', 'Stim', 'velocityPeaks', 'hold_prep')
+ 
+tic;
+ 
+% --- Load data -----------------------------------------------------------
+basePath = '/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_scripts/final_04_win';
+load(fullfile(basePath, 'subjectData.mat'));
+load(fullfile(basePath, 'icoh_data_anal_2022_11_09.mat'));
+ 
+% --- Config (lifted out of loops) ----------------------------------------
+dz          = {'stroke', 'healthy'};
+stim_status = {'Stim', 'Sham'};
+times_all   = {'pre', 'i05', 'i15', 'pos'};
+phases      = {'hold_prep', 'Prep_Reach'};         % field keys into R
+phasesIcoh  = {'Hold_Prep', 'Prep_Reach'};         % matching keys in icoh struct
+FOI_label   = {'Delta', 'Theta', 'Alpha', 'Beta', 'Gamma'};
+kin_lbl     = {'movementDuration','reactionTime','handpathlength','avgVelocity', ...
+               'maxVelocity','velocityPeaks','timetoMaxVel','timetoMaxVeln', ...
+               'avgAcceleration','maxAcceleration','accuracy','normalizedjerk','IOC'};
+ 
+kin_idx_list = [1 2 4 5 6 7 8 9 10];   % which kinematics to analyse
+foi_list     = 2:5;                     % Theta..Gamma (matches original)
+ 
+% Subject indices per (disease, stim) group: groupIdx{k, l}
+groupIdx = { [1 2 3 20 21], [4 5 6 7 9]; ...   % stroke Stim, stroke Sham
+             [10 12 13 14 17 18], [8 11 15 16 19] }; % healthy Stim, healthy Sham
+ 
+% --- Pre-allocate results ------------------------------------------------
+R = struct();   % R.(phase).(dz).(stim).(FOI).(kin).{kin,eeg,pf,pv,r,p}
+ 
+% Original icoh_lin_reg_p_all = [f, k, l, kin_idx, 4 p-values hold_prep, 4 p-values prep_reach]
+nIter = numel(foi_list) * 2 * 2 * numel(kin_idx_list);
+icoh_lin_reg_p_all = nan(nIter, 12);
+ 
+% p_sum has one row per (foi, kin, phase, dz, stim, time)
+nPSum = numel(FOI_label) * numel(kin_idx_list) * numel(phases) * 2 * 2 * 4;
+p_sum = nan(nPSum, 7);
+pRow = 0;
+ 
+% --- Main computation loop -----------------------------------------------
+count = 0;
+for f = foi_list
+    FOI = FOI_label{f};
+    for k = 1:2
+        dzName = dz{k};
+        for l = 1:2
+            stimName = stim_status{l};
+            i1 = groupIdx{k, l};
+            nSub = numel(i1);
+ 
+            for kin_idx = kin_idx_list
+                count = count + 1;
+                kinName = kin_lbl{kin_idx};
+ 
+                % Pull kinematics: nSub × 4, indexed by position (no sparse rows)
+                kinMat = nan(nSub, 4);
+                for s = 1:nSub
+                    raw = subjectData(i1(s)).kinematics.data{1, kin_idx};
+                    kinMat(s, :) = mean(raw(:, 1:4), 1, 'omitnan');
+                end
+ 
+                % Loop both phases
+                phaseP = nan(2, 4);   % p-values per phase × time, for icoh_lin_reg_p_all
+                for pIdx = 1:2
+                    phaseR  = phases{pIdx};       % field key for R
+                    phaseIc = phasesIcoh{pIdx};   % field key into icoh struct
+ 
+                    % Pull EEG: nSub × 4 (one column per timepoint)
+                    eegMat = nan(nSub, 4);
+                    for t = 1:4
+                        eegMat(:, t) = squeeze( ...
+                            icoh_data_anal_2022_11_09.mat_diff.c3c4.(FOI). ...
+                            (dzName).(phaseIc).(stimName).(times_all{t}));
+                    end
+ 
+                    % Regress every timepoint
+                    pfAll = nan(4, 2);
+                    pvAll = nan(nSub, 4);
+                    rAll  = nan(1, 4);
+                    pAll  = nan(1, 4);
+                    for t = 1:4
+                        x = eegMat(:, t);
+                        y = kinMat(:, t);
+                        pfAll(t, :) = polyfit(x, y, 1);
+                        pvAll(:, t) = polyval(pfAll(t, :), x);
+                        [rc, pc]    = corrcoef(x, y);
+                        rAll(t)     = rc(1, 2);
+                        pAll(t)     = pc(1, 2);
+ 
+                        % p_sum row
+                        pRow = pRow + 1;
+                        p_sum(pRow, :) = [f, kin_idx, pIdx, k, l, t, pc(1, 2)];
+                    end
+                    phaseP(pIdx, :) = pAll;
+ 
+                    % Stash everything into R for later plotting
+                    R.(phaseR).(dzName).(stimName).(FOI).(kinName).kin = kinMat;
+                    R.(phaseR).(dzName).(stimName).(FOI).(kinName).eeg = eegMat;
+                    R.(phaseR).(dzName).(stimName).(FOI).(kinName).pf  = pfAll;
+                    R.(phaseR).(dzName).(stimName).(FOI).(kinName).pv  = pvAll;
+                    R.(phaseR).(dzName).(stimName).(FOI).(kinName).r   = rAll;
+                    R.(phaseR).(dzName).(stimName).(FOI).(kinName).p   = pAll;
+                end
+ 
+                icoh_lin_reg_p_all(count, :) = [f, k, l, kin_idx, phaseP(1, :), phaseP(2, :)];
+            end
+        end
+    end
+end
+ 
+% Trim the rows of p_sum that the inner foi_list (2:5) skipped
+p_sum = p_sum(1:pRow, :);
+icoh_lin_reg_p_all = icoh_lin_reg_p_all(1:count, :);
+ 
+% --- Emit dynamically-named variables to base workspace ------------------
+%  Recreates the originals like Gamma_velocityPeaks_c3c4_diff_hold_prep_stroke_Stim_kin
+%  so any downstream code still works.
+phaseSuffixMap = struct('hold_prep', 'hold_prep', 'Prep_Reach', 'Prep_Reach');
+timeSuffix     = {'pre', 'i05', 'i15', 'pos'};
+ 
+phaseList = fieldnames(R);
+for pi = 1:numel(phaseList)
+    phaseR = phaseList{pi};
+    dzNames = fieldnames(R.(phaseR));
+    for di = 1:numel(dzNames)
+        dzName = dzNames{di};
+        stimNames = fieldnames(R.(phaseR).(dzName));
+        for si = 1:numel(stimNames)
+            stimName = stimNames{si};
+            foiNames = fieldnames(R.(phaseR).(dzName).(stimName));
+            for fi = 1:numel(foiNames)
+                FOI = foiNames{fi};
+                kinNames = fieldnames(R.(phaseR).(dzName).(stimName).(FOI));
+                for ki = 1:numel(kinNames)
+                    kinName = kinNames{ki};
+                    entry = R.(phaseR).(dzName).(stimName).(FOI).(kinName);
+                    base  = sprintf('%s_%s_c3c4_diff_%s_%s_%s', ...
+                                     FOI, kinName, phaseSuffixMap.(phaseR), dzName, stimName);
+ 
+                    assignin('base', [base '_kin'], entry.kin);
+                    assignin('base', [base '_eeg'], entry.eeg);
+                    for t = 1:4
+                        suf = timeSuffix{t};
+                        assignin('base', [base '_' suf '_pf'], entry.pf(t, :));
+                        assignin('base', [base '_' suf '_pv'], entry.pv(:, t));
+                        % Original r and p were the full 2×2 corrcoef matrices
+                        rMat = [1 entry.r(t); entry.r(t) 1];
+                        pMat = [1 entry.p(t); entry.p(t) 1];
+                        assignin('base', [base '_' suf '_r'], rMat);
+                        assignin('base', [base '_' suf '_p'], pMat);
+                    end
+                end
+            end
+        end
+    end
+end
+ 
+% Also push the main results to base
+assignin('base', 'R', R);
+assignin('base', 'p_sum', p_sum);
+assignin('base', 'icoh_lin_reg_p_all', icoh_lin_reg_p_all);
+ 
+fprintf('Done in %.2f s.  %d regression conditions computed.\n', toc, count);
+fprintf('Call plotRegressions(R, FOI, dz, stim, kin, phase) to view a figure.\n');
+fprintf('  e.g. plotRegressions(R, ''Gamma'', ''stroke'', ''Stim'', ''velocityPeaks'', ''hold_prep'')\n');
+ 
+ 
+%% ========================================================================
+%  Plot helper — call after the script finishes
+%  ========================================================================
+function plotRegressions(R, FOI, dzName, stimName, kinName, phaseName, varargin)
+% plotRegressions  Display the 2×2 timepoint regression panel for one condition,
+%                  with a shaded 95% CI around the regression line.
+%
+%   plotRegressions(R, 'Gamma', 'stroke', 'Stim', 'velocityPeaks', 'hold_prep')
+%   plotRegressions(..., 'Alpha', 0.05)    % CI level (default 0.05 → 95% CI)
+%   plotRegressions(..., 'Band',  'pi')    % 'ci' (default) or 'pi' for prediction interval
+
+    % --- options
+    opt.Alpha = 0.05;
+    opt.Band  = 'ci';
+    for ii = 1:2:numel(varargin)
+        opt.(varargin{ii}) = varargin{ii+1};
+    end
+
+    if ~isfield(R, phaseName)
+        error('Phase "%s" not found in R. Available: %s', ...
+              phaseName, strjoin(fieldnames(R), ', '));
+    end
+    try
+        entry = R.(phaseName).(dzName).(stimName).(FOI).(kinName);
+    catch
+        error('Combination not found: %s / %s / %s / %s / %s', ...
+              phaseName, dzName, stimName, FOI, kinName);
+    end
+
+    timeLabels = {'pre', 'i05', 'i15', 'pos'};
+
+    figure;
+    if strcmp(phaseName, 'hold_prep')
+        set(gcf, 'Position', [214 574 560 420]);
+    else
+        set(gcf, 'Position', [805 572 560 420]);
+    end
+
+    bandColor = [1.0 0.6 0.6];   % light red — matches the regression line
+    lineColor = [0.85 0.15 0.15];
+
+    for t = 1:4
+        subplot(2, 2, t); hold on;
+        x = entry.eeg(:, t);
+        y = entry.kin(:, t);
+
+        % Build a smooth x grid for the band
+        xGrid = linspace(min(x), max(x), 100)';
+
+        % Confidence / prediction band around the regression line
+        [yFit, yLo, yHi] = regressionBand(x, y, xGrid, opt.Alpha, opt.Band);
+
+        % Shaded band first (so points and line draw on top)
+        fill([xGrid; flipud(xGrid)], [yLo; flipud(yHi)], bandColor, ...
+             'EdgeColor', 'none', 'FaceAlpha', 0.3);
+
+        % Regression line on the smooth grid
+        plot(xGrid, yFit, 'Color', lineColor, 'LineWidth', 1.5);
+
+        % Raw data
+        plot(x, y, '.', 'MarkerSize', 12, 'Color', [0.2 0.2 0.2]);
+
+        pVal = entry.p(t);
+        rVal = entry.r(t);
+        ttl  = sprintf('%s  r=%.2f, p=%.3f', timeLabels{t}, rVal, pVal);
+        if pVal < 0.05
+            title(ttl, 'Color', lineColor);
+        else
+            title(ttl);
+        end
+        box off;
+    end
+
+    sgtitle(sprintf('%s %s %s %s %s', FOI, strrep(phaseName,'_',' '), dzName, stimName, kinName));
+end
 
 
+function [yFit, yLo, yHi] = regressionBand(x, y, xGrid, alpha, bandType)
+% Compute the 1-alpha band for a simple linear regression y = b0 + b1*x.
+%   bandType = 'ci' → confidence band for the mean (narrow at center)
+%   bandType = 'pi' → prediction band for new observations (wider)
+
+    x = x(:);  y = y(:);
+    ok = isfinite(x) & isfinite(y);
+    x = x(ok); y = y(ok);
+    n = numel(x);
+
+    if n < 3
+        yFit = nan(size(xGrid));  yLo = yFit;  yHi = yFit;
+        return
+    end
+
+    xbar  = mean(x);
+    Sxx   = sum((x - xbar).^2);
+
+    % OLS fit
+    b1 = sum((x - xbar) .* (y - mean(y))) / Sxx;
+    b0 = mean(y) - b1 * xbar;
+    yFit = b0 + b1 * xGrid;
+
+    % Residual standard error
+    yhat   = b0 + b1 * x;
+    resid  = y - yhat;
+    sigma2 = sum(resid.^2) / (n - 2);
+
+    % Variance at each xGrid point
+    if strcmpi(bandType, 'pi')
+        seBand = sqrt(sigma2 * (1 + 1/n + (xGrid - xbar).^2 / Sxx));
+    else
+        seBand = sqrt(sigma2 * (1/n + (xGrid - xbar).^2 / Sxx));
+    end
+
+    % Critical t-value
+    tcrit = tinv(1 - alpha/2, n - 2);
+
+    yLo = yFit - tcrit * seBand;
+    yHi = yFit + tcrit * seBand;
+end
+% Movement speed (lower duration = faster)
+plotRegressions(R, 'Gamma', 'stroke', 'Stim', 'movementDuration', 'hold_prep')
+
+% Smoothness (fewer velocity peaks = smoother)
+plotRegressions(R, 'Gamma', 'stroke', 'Stim', 'velocityPeaks',    'hold_prep')
 %% Fig 4G spider plot
 
 figure; set(gcf,'Position',[1935 333 1050 611])
