@@ -33,14 +33,14 @@ legend('C3','C4','VR','current')
 
 %% I copied Allen's script for the processing steps for sbj4
 
-sbj_no='15'
+sbj_no='05'
 
 fldr_nm=['pro00087153_00',sbj_no];
 file_nm=['pro00087153_00',sbj_no,'_S1-VRdata_preprocessed.mat'];
 %load(['I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw',fldr_nm,...
 %    '\analysis\S1-VR_preproc\',file_nm])
-load(['I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\',fldr_nm,...
-    '\analysis\S1-VR_preproc\',file_nm])
+load(['/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_raw/',fldr_nm,...
+    '/analysis/S1-VR_preproc/',file_nm])
 
 figure
 plot(trialData.eeg.data(2.5e6:4.5e6,7)*100)
@@ -51,7 +51,7 @@ plot(trialData.eeg.data(2.5e6:4.5e6,18)*100)
 set(gca,'ylim',[-0.5e6 0.5e6])
 
 
-load('I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\PreprocessingCheck\pipeline.mat')
+load('/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/PreprocessingCheck/pipeline.mat')
 
 subject='pro00087153_0004';
 protocolfolder = 'I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\PreprocessingCheck\';

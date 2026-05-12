@@ -85,7 +85,61 @@ title('i15')
 %fig on the right is sbj 21
 % downloaded these from Box/PreprocessedData_Rowland from individual sbject
 % folders and then changed the transparency's in Illustrator
+subjects(1).id   = 'pro00087153_0005';
+subjects(1).name = 'Chronic Stroke Stim';
+subjects(2).id   = 'pro00087153_0021';
+subjects(2).name = 'Chronic Stroke Sham';
 
+sessionNames  = {'pre stim','early stim (5 min)','late stim (15 min)','post stim'};
+sessionColors = {[0 0 0], [1 0 0], [1 0 0], [0 0 0.8]};
+sessionStyles = {'-','-','--','-'};
+sessionIdx    = [1 2 3 4];
+
+dataRoot = '/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_raw';
+
+fh = figure('Name','Fig 2B velocity profiles','Position',[100 100 1100 380]);
+
+for g = 1:numel(subjects)
+    vrFile = fullfile(dataRoot, subjects(g).id, 'analysis', 'S1-VR_preproc', ...
+        [subjects(g).id '_S1-VRdata_preprocessed.mat']);
+    d = load(vrFile);
+
+    subplot(1, numel(subjects), g); hold on
+    lh = gobjects(numel(sessionNames),1);
+
+    for s = 1:numel(sessionNames)
+        tIdx        = sessionIdx(s);
+        oneTrial    = d.trialData.vr(tIdx);
+        envSettings = d.trialData.vr(tIdx).environment.settings.Settings;
+
+        hFigs = [figure('Visible','off'), figure('Visible','off')];
+        vrm = calculateVRMetrics(oneTrial, envSettings, hFigs, ...
+            sessionColors{s}, sessionStyles{s}, 0);
+        close(hFigs);
+
+        Vmat = vrm.V_plot;
+        mu  = mean(Vmat, 2, 'omitnan');
+        sd = std(Vmat, 0, 2, 'omitnan');
+        t   = vrm.t(:);
+
+        patch([t; flipud(t)], [mu-sd; flipud(mu+sd)], sessionColors{s}, ...
+              'FaceAlpha', 0.15, 'EdgeColor', 'none');
+
+        lh(s) = plot(t, mu, 'Color', sessionColors{s}, ...
+                     'LineStyle', sessionStyles{s}, 'LineWidth', 2);
+    end
+
+    title(subjects(g).name,'FontWeight','normal')
+    xlabel('% Reach'); ylabel('Velocity (m/s)'); xlim([0 100])
+    set(gca,'Box','off','TickDir','out')
+    if g == 1
+        legend(lh, sessionNames, 'Location','northeast','Box','off')
+    end
+end
+
+axs = findall(fh,'Type','axes');
+yls = cell2mat(get(axs,'YLim'));
+for a = axs', ylim(a, [min(yls(:,1)) max(yls(:,2))]); end
 
 %% line and bar plots
 
