@@ -16,8 +16,8 @@ sbj_no='15'
 
 fldr_nm=['pro00087153_00',sbj_no];
 file_nm=['pro00087153_00',sbj_no,'_S1-VRdata_preprocessed.mat'];
-load(['I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\',fldr_nm,...
-    '\analysis\S1-VR_preproc\',file_nm])
+load(['/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/data_raw/',fldr_nm,...
+    '/analysis/S1-VR_preproc/',file_nm])
 figure; hold on
 set(gcf,'Position',[882 -225 604 1049])
 plot(trialData.eeg.data(:,7))
@@ -54,7 +54,7 @@ set(gca,'ylim',[-0.5e6 0.5e6])
 load('/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/PreprocessingCheck/pipeline.mat')
 
 subject='pro00087153_0004';
-protocolfolder = 'I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\PreprocessingCheck\';
+protocolfolder = '/Volumes/rowlandlab/MIND_manuscript/NCR/Zobaer - eeg and tdcs/data analysis/PreprocessingCheck/';
 
 % Channel
 channel=7;

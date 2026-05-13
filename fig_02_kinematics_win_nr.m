@@ -1,6 +1,6 @@
 %% will work on 3D plots
 
-load('MATLAB Drive/papers-roddey-tdcs-eeg-vr/pro00087153_0005_S1-VRdata_preprocessed.mat')
+load('papers-roddey-tdcs-eeg-vr/pro00087153_0005_S1-VRdata_preprocessed.mat')
 
 
 %sbj 5 pre
@@ -149,7 +149,7 @@ sbjs_cs=['03';'04';'05';'42';'43';'13';'15';'17';'18';'21'];
 figure
 set(gcf,'Position',[35 230 1285 715])
 for i=1:10
-    eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs(i,:),'_S2-Metrics.mat'')'])
+    eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs(i,:),'_S2-Metrics.mat'')'])
     %eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/pro00087153_00',sbjs_cs(i,:),'/S2-metrics\pro00087153_00',sbjs_cs(i,:),'_S2-Metrics.mat'')'])
 
     for j=2:13
@@ -198,7 +198,7 @@ end
 
 sbjs_cs_non=['13';'15';'17';'18';'21'];
 for i=1:5
-    eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs_non(i,:),'_S2-Metrics.mat'')'])
+    eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs_non(i,:),'_S2-Metrics.mat'')'])
     %eval(['load(''I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_00',sbjs_cs_non(i,:),'\analysis\S2-metrics\pro00087153_00',sbjs_cs_non(i,:),'_S2-Metrics.mat'')'])
     for j=1:13
         for k=1:4
@@ -210,7 +210,7 @@ end
 
 sbjs_hc_stm=['22';'24';'25';'26';'29';'30'];
 for i=1:6
-    eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_stm(i,:),'_S2-Metrics.mat'')'])
+    eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_stm(i,:),'_S2-Metrics.mat'')'])
     %eval(['load(''I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_00',sbjs_hc_stm(i,:),'\analysis\S2-metrics\pro00087153_00',sbjs_hc_stm(i,:),'_S2-Metrics.mat'')'])
     for j=1:13
         for k=1:4
@@ -222,7 +222,7 @@ end
 
 sbjs_hc_non=['20';'23';'27';'28';'36'];
 for i=1:5
-    eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_non(i,:),'_S2-Metrics.mat'')'])
+    eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_non(i,:),'_S2-Metrics.mat'')'])
     %eval(['load(''I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_00',sbjs_hc_non(i,:),'\analysis\S2-metrics\pro00087153_00',sbjs_hc_non(i,:),'_S2-Metrics.mat'')'])
     for j=1:13
         for k=1:4
@@ -248,7 +248,7 @@ end
     
 figure % this is for cs group - looks exact same as allen's
 set(gcf,'Position',[35 230 1285 715])
-load('MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_0003_S2-Metrics.mat','metricdat')
+load('papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_0003_S2-Metrics.mat','metricdat')
 %load('I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_0003\analysis\S2-metrics\pro00087153_0003_S2-Metrics.mat','metricdat')
 for j=2:13
     subplot(2,6,j-1); hold on
@@ -295,7 +295,7 @@ kin_lbl={'movementDuration';'reactionTime';'handpathlength';'avgVelocity';'maxVe
 sbjs_cs_stm=['03';'04';'05';'42';'43'];
 for k=1:13
     for i=1:5
-        eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs_stm(i,:),'_S2-Metrics.mat'',''metricdat'')'])
+        eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs_stm(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         eval(['mean_kin_',num2str(k),'_',sbjs_cs_stm(i,:),'=metricdat.data{1,k}(:,1:4);'])
     %     eval(['se_kin_',sbjs_cs_stm(i,:),'=std(metricdat.data{1,kin_idx}(:,1:4))/sqrt(5);'])
     %     eval(['[a1_kin_',sbjs_cs_stm(i,:),'_p,a1_kin_',sbjs_cs_stm(i,:),'_anovatab,a1_kin_',sbjs_cs_stm(i,:),'_stats]=',...
@@ -316,7 +316,7 @@ end
 sbjs_cs_non=['13';'15';'17';'18';'21'];
 for k=1:13
     for i=1:5
-        eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs_non(i,:),'_S2-Metrics.mat'',''metricdat'')'])
+        eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_cs_non(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         %eval(['load(''I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_00',sbjs_cs_non(i,:),'\analysis\S2-metrics\pro00087153_00',sbjs_cs_non(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         eval(['mean_kin_',num2str(k),'_',sbjs_cs_non(i,:),'=metricdat.data{1,k}(:,1:4);'])
     %     eval(['se_kin_',sbjs_cs_non(i,:),'=nanstd(metricdat.data{1,kin_idx}(:,1:4))/sqrt(5);'])
@@ -337,7 +337,7 @@ end
 sbjs_hc_stm=['22';'24';'25';'26';'29';'30'];
 for k=1:13
     for i=1:6
-        eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_stm(i,:),'_S2-Metrics.mat'',''metricdat'')'])
+        eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_stm(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         %eval(['load(''I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_00',sbjs_hc_stm(i,:),'\analysis\S2-metrics\pro00087153_00',sbjs_hc_stm(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         eval(['mean_kin_',num2str(k),'_',sbjs_hc_stm(i,:),'=metricdat.data{1,k}(:,1:4);'])
     %     eval(['se_kin_',sbjs_hc_stm(i,:),'=std(metricdat.data{1,kin_idx}(:,1:4))/sqrt(6);'])
@@ -358,7 +358,7 @@ end
 sbjs_hc_non=['20';'23';'27';'28';'36'];
 for k=1:13
     for i=1:5
-        eval(['load(''MATLAB Drive/papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_non(i,:),'_S2-Metrics.mat'',''metricdat'')'])
+        eval(['load(''papers-roddey-tdcs-eeg-vr/S2-metrics/pro00087153_00',sbjs_hc_non(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         %eval(['load(''I:\MIND\MIND manuscripts\NCR\Zobaer - eeg and tdcs\data analysis\data_raw\pro00087153_00',sbjs_hc_non(i,:),'\analysis\S2-metrics\pro00087153_00',sbjs_hc_non(i,:),'_S2-Metrics.mat'',''metricdat'')'])
         eval(['mean_kin_',num2str(k),'_',sbjs_hc_non(i,:),'=metricdat.data{1,k}(:,1:4);'])
     %     eval(['se_kin_',sbjs_hc_non(i,:),'=std(metricdat.data{1,kin_idx}(:,1:4))/sqrt(5);'])
