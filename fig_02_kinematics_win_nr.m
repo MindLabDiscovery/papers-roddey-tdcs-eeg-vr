@@ -454,6 +454,101 @@ errorbar(mean_kin5_hc_non,mean_kin5_hc_non,'k.')
 %interestingly for cs stm 4/5 were significant for inc maxacceleration
 %not true hc non had sig decreased in reaction time
 
+
+%% Statistics Verification
+function tukey_graphpad(stim_data, sham_data, group_label, kin_label)
+    n_stim = size(stim_data, 1);
+    n_sham = size(sham_data, 1);
+    n_time = size(stim_data, 2);
+    
+
+    n = n_stim;
+    
+    all_data = [stim_data; sham_data];
+    StimCondition = categorical([repmat({'Stim'}, n_stim, 1); repmat({'Sham'}, n_sham, 1)]);
+    T = array2table(all_data, 'VariableNames', {'pre','i05','i15','pos'});
+    T.StimCondition = StimCondition;
+    
+    
+    Time = table(categorical((1:n_time)'), 'VariableNames', {'Time'});
+    
+    rm = fitrm(T, 'pre,i05,i15,pos ~ StimCondition', 'WithinDesign', Time);
+    rtbl = ranova(rm, 'WithinModel', 'Time');
+    
+    disp(rtbl)
+    
+    row_names = rtbl.Properties.RowNames;
+    err_idx = find(contains(row_names, 'Error') & contains(row_names, 'Time'));
+    if isempty(err_idx)
+        [~, err_idx] = max(rtbl.DF);
+    end
+    
+    MS_resid = rtbl.MeanSq(err_idx);
+    df_resid = rtbl.DF(err_idx);
+    SE_diff  = sqrt(2 * MS_resid / n);
+    
+    fprintf('\n--- Tukey post-hoc (GraphPad-style, pooled SE) for %s: %s ---\n', kin_label, group_label);
+    fprintf('Used row: %s (MS = %.4f, df = %d)\n', row_names{err_idx}, MS_resid, df_resid);
+    fprintf('SE_diff = %.4f\n', SE_diff);
+    
+    n_groups_for_q = n_time;
+    tp = {'BL','ES','LS','Post'};
+    grp_data = {stim_data, sham_data};
+    grp_lbl  = {'Stim','Sham'};
+    
+    for g = 1:2
+        means = mean(grp_data{g}, 1);
+        fprintf('\n  %s:\n', grp_lbl{g});
+        for i = 1:n_time
+            for j = i+1:n_time
+                diff_ij = means(i) - means(j);
+                q = abs(diff_ij) / (SE_diff / sqrt(2));
+                p_adj = tukey_pvalue(q, n_groups_for_q, df_resid);
+                fprintf('    %s vs %s: diff = %.4f, SE = %.4f, q = %.3f, p_adj = %.4f\n', ...
+                    tp{i}, tp{j}, diff_ij, SE_diff, q, p_adj);
+            end
+        end
+    end
+end
+
+function p = tukey_pvalue(q, k, df)
+% p-value (upper tail) for Tukey's studentized range statistic q
+% k = number of groups being compared
+% df = error degrees of freedom
+%
+% Uses numerical integration of the exact studentized range PDF.
+% Vectorization-safe: q must be scalar; k and df scalar.
+
+    if q <= 0
+        p = 1;
+        return;
+    end
+    
+    % Studentized range CDF formula (Tukey, 1949):
+    % F(q) = integral over s from 0 to inf of:
+    %         k * f_chi(s; df) * integral over z from -inf to inf of:
+    %             phi(z) * [Phi(z + q*s) - Phi(z)]^(k-1) dz
+    % where f_chi is the PDF of sqrt(chi^2/df), and phi/Phi are standard normal.
+    
+    % Inner integral as a function of s (scalar):
+    inner = @(s) integral(@(z) normpdf(z) .* (normcdf(z + q*s) - normcdf(z)).^(k-1), ...
+                          -8, 8);
+    
+    % Outer integrand: must accept vector s, return vector
+    outer = @(s) arrayfun(@(ss) k * chi_scaled_pdf(ss, df) * inner(ss), s);
+    
+    cdf_val = integral(outer, 0, 10);
+    p = 1 - cdf_val;
+    p = max(min(p, 1), 0);   % clamp to [0,1] for numerical safety
+end
+
+function f = chi_scaled_pdf(s, df)
+% PDF of S = sqrt(chi^2_df / df), the studentized range scale variable
+    f = (2 * df^(df/2)) / (gamma(df/2) * 2^(df/2)) * s.^(df-1) .* exp(-df*s.^2/2);
+end
+tukey_graphpad(cs_stm_data, cs_non_data, 'CS', kin_lbl{kin_idx});
+tukey_graphpad(hc_stm_data, hc_non_data, 'HC', kin_lbl{kin_idx});
+
 %% anova2
 
 %difficult to replicate with graphpad bc it runs a repeated measures 2-way
