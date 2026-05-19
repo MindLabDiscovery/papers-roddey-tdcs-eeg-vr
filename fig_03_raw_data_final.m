@@ -196,6 +196,7 @@ for trial = 1 %this is for pre
     ylim([-4 0.5])
 end
 
+%%
 for trial = [1:2] %this is for intra5
     figure;
     sgtitle([subject,' - ',['trial ', num2str(trial)],' - Channel ',num2str(channel)],'Interpreter','none')
@@ -333,6 +334,8 @@ for trial = [1:2] %this is for intra5
     ylim([-4 0.5])
 end
 
+
+
 %Create sections - pretty cool!
 figure
 subplot(5, 1, 1)
@@ -340,6 +343,7 @@ fs = 1024;
 xdata=processingData{1}.data(channel,:);
 ydata=(1:numel(xdata))/fs;
 title(processingData{1}.details)
+
 hold on
 % for i = 1:4
 %     rectangle('Position',[processingData{1}.vr(i,1)/fs,-200,(processingData{1}.vr(i,2)-processingData{1}.vr(i,1))/fs,400],'FaceColor','yellow')
