@@ -115,7 +115,7 @@ for p=1:3
 end
 
 count=0; 
-for s4=[10 12 13 14 17 18]
+for s4=[10 12 13 14 17]
     count=count+1;
     %for f=1:5
         for p=1:3
@@ -571,7 +571,7 @@ for p=1:3
 end
 
 count=0;
-for s4=[10 12 13 14 17 18]
+for s4=[10 12 13 14 17]
     count=count+1;
     for f=1:5
         for p=1:3
