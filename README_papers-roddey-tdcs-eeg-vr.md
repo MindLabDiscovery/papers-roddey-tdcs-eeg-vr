@@ -33,7 +33,9 @@ reported results.
   - Signal Processing Toolbox
 - **External toolbox:**
   - [EEGLAB](https://sccn.ucsd.edu/eeglab/) — required for the preprocessing-check
-    script. Tested with version [fill in].
+    script. Tested with version 20201.1.
+  - clean_rawdata 2.5
+  - FieldTrip version 20200607
 
 ## Data
 
